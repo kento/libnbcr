@@ -30,7 +30,10 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-bin_PROGRAMS = nbcrc$(EXEEXT) nbcrs$(EXEEXT)
+bin_PROGRAMS = nbcrc$(EXEEXT) nbcrc_mpi$(EXEEXT) \
+	nbcrc_mpi_nbcr$(EXEEXT) nbcrs$(EXEEXT) himeno$(EXEEXT) \
+	himeno_netbound$(EXEEXT) himeno_nbcr$(EXEEXT) \
+	himeno_netbound_nbcr$(EXEEXT)
 subdir = examples
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -43,13 +46,60 @@ CONFIG_CLEAN_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
-am__objects_1 =
-am_nbcrc_OBJECTS = nbcrc-nbcrc.$(OBJEXT) $(am__objects_1)
+am__objects_1 = himeno-nbcr.$(OBJEXT) himeno-nbcr_util.$(OBJEXT)
+am_himeno_OBJECTS = himeno-himenoBMTxps.$(OBJEXT) $(am__objects_1)
+himeno_OBJECTS = $(am_himeno_OBJECTS)
+himeno_DEPENDENCIES =
+himeno_LINK = $(CCLD) $(himeno_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
+	$(LDFLAGS) -o $@
+am__objects_2 = himeno_nbcr-nbcr.$(OBJEXT) \
+	himeno_nbcr-nbcr_util.$(OBJEXT)
+am_himeno_nbcr_OBJECTS = himeno_nbcr-himenoBMTxps_nbcr.$(OBJEXT) \
+	$(am__objects_2)
+himeno_nbcr_OBJECTS = $(am_himeno_nbcr_OBJECTS)
+himeno_nbcr_DEPENDENCIES =
+himeno_nbcr_LINK = $(CCLD) $(himeno_nbcr_CFLAGS) $(CFLAGS) \
+	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+am__objects_3 = himeno_netbound-nbcr.$(OBJEXT) \
+	himeno_netbound-nbcr_util.$(OBJEXT)
+am_himeno_netbound_OBJECTS =  \
+	himeno_netbound-himenoBMTxps_netbound.$(OBJEXT) \
+	$(am__objects_3)
+himeno_netbound_OBJECTS = $(am_himeno_netbound_OBJECTS)
+himeno_netbound_DEPENDENCIES =
+himeno_netbound_LINK = $(CCLD) $(himeno_netbound_CFLAGS) $(CFLAGS) \
+	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+am__objects_4 = himeno_netbound_nbcr-nbcr.$(OBJEXT) \
+	himeno_netbound_nbcr-nbcr_util.$(OBJEXT)
+am_himeno_netbound_nbcr_OBJECTS =  \
+	himeno_netbound_nbcr-himenoBMTxps_netbound_nbcr.$(OBJEXT) \
+	$(am__objects_4)
+himeno_netbound_nbcr_OBJECTS = $(am_himeno_netbound_nbcr_OBJECTS)
+himeno_netbound_nbcr_DEPENDENCIES =
+himeno_netbound_nbcr_LINK = $(CCLD) $(himeno_netbound_nbcr_CFLAGS) \
+	$(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+am__objects_5 = nbcrc-nbcr.$(OBJEXT) nbcrc-nbcr_util.$(OBJEXT)
+am_nbcrc_OBJECTS = nbcrc-nbcrc.$(OBJEXT) $(am__objects_5)
 nbcrc_OBJECTS = $(am_nbcrc_OBJECTS)
 nbcrc_DEPENDENCIES =
 nbcrc_LINK = $(CCLD) $(nbcrc_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
-am_nbcrs_OBJECTS = nbcrs-nbcrs.$(OBJEXT) $(am__objects_1)
+am__objects_6 = nbcrc_mpi-nbcr.$(OBJEXT) nbcrc_mpi-nbcr_util.$(OBJEXT)
+am_nbcrc_mpi_OBJECTS = nbcrc_mpi-nbcrc_mpi.$(OBJEXT) $(am__objects_6)
+nbcrc_mpi_OBJECTS = $(am_nbcrc_mpi_OBJECTS)
+nbcrc_mpi_DEPENDENCIES =
+nbcrc_mpi_LINK = $(CCLD) $(nbcrc_mpi_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
+	$(LDFLAGS) -o $@
+am__objects_7 = nbcrc_mpi_nbcr-nbcr.$(OBJEXT) \
+	nbcrc_mpi_nbcr-nbcr_util.$(OBJEXT)
+am_nbcrc_mpi_nbcr_OBJECTS = nbcrc_mpi_nbcr-nbcrc_mpi_nbcr.$(OBJEXT) \
+	$(am__objects_7)
+nbcrc_mpi_nbcr_OBJECTS = $(am_nbcrc_mpi_nbcr_OBJECTS)
+nbcrc_mpi_nbcr_DEPENDENCIES =
+nbcrc_mpi_nbcr_LINK = $(CCLD) $(nbcrc_mpi_nbcr_CFLAGS) $(CFLAGS) \
+	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+am__objects_8 = nbcrs-nbcr.$(OBJEXT) nbcrs-nbcr_util.$(OBJEXT)
+am_nbcrs_OBJECTS = nbcrs-nbcrs.$(OBJEXT) $(am__objects_8)
 nbcrs_OBJECTS = $(am_nbcrs_OBJECTS)
 nbcrs_DEPENDENCIES =
 nbcrs_LINK = $(CCLD) $(nbcrs_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
@@ -61,8 +111,14 @@ COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
 LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
-SOURCES = $(nbcrc_SOURCES) $(nbcrs_SOURCES)
-DIST_SOURCES = $(nbcrc_SOURCES) $(nbcrs_SOURCES)
+SOURCES = $(himeno_SOURCES) $(himeno_nbcr_SOURCES) \
+	$(himeno_netbound_SOURCES) $(himeno_netbound_nbcr_SOURCES) \
+	$(nbcrc_SOURCES) $(nbcrc_mpi_SOURCES) \
+	$(nbcrc_mpi_nbcr_SOURCES) $(nbcrs_SOURCES)
+DIST_SOURCES = $(himeno_SOURCES) $(himeno_nbcr_SOURCES) \
+	$(himeno_netbound_SOURCES) $(himeno_netbound_nbcr_SOURCES) \
+	$(nbcrc_SOURCES) $(nbcrc_mpi_SOURCES) \
+	$(nbcrc_mpi_nbcr_SOURCES) $(nbcrs_SOURCES)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -72,7 +128,7 @@ AUTOCONF = ${SHELL} /home/usr2/11D37048/lib/libnbcr/missing --run autoconf
 AUTOHEADER = ${SHELL} /home/usr2/11D37048/lib/libnbcr/missing --run autoheader
 AUTOMAKE = ${SHELL} /home/usr2/11D37048/lib/libnbcr/missing --run automake-1.10
 AWK = gawk
-CC = gcc
+CC = mpicc
 CCDEPMODE = depmode=gcc3
 CFLAGS = -g -O2
 CPPFLAGS = 
@@ -148,17 +204,36 @@ target_alias =
 top_build_prefix = ../
 top_builddir = ..
 top_srcdir = ..
+#bin_PROGRAMS = nbcrs himeno himeno_nbcr
 RDMATLS_DIR = /home/usr2/11D37048/usr/tools/libibtls
-INCLUDE_DIR = ${RDMATLS_DIR}/include
+INCLUDE_DIR = ${RDMATLS_DIR}/include 
 LIBRARY_DIR = ${RDMATLS_DIR}/lib
 SRC_DIR = ../src
-SRC_TARGET = 
+SRC_TARGET = $(SRC_DIR)/nbcr.c $(SRC_DIR)/nbcr_util.c
 nbcrc_SOURCES = nbcrc.c ${SRC_TARGET}
-nbcrc_CFLAGS = -I${INCLUDE_DIR} -I${SRC_DIR}
+nbcrc_CFLAGS = -I${INCLUDE_DIR} -I${SRC_DIR} -I../include
 nbcrc_LDADD = -L${LIBRARY_DIR} -libtls -lpthread -lrdmacm
+nbcrc_mpi_SOURCES = nbcrc_mpi.c ${SRC_TARGET}
+nbcrc_mpi_CFLAGS = -I${INCLUDE_DIR} -I${SRC_DIR} -I../include
+nbcrc_mpi_LDADD = -L${LIBRARY_DIR} -libtls -lpthread -lrdmacm
+nbcrc_mpi_nbcr_SOURCES = nbcrc_mpi_nbcr.c ${SRC_TARGET}
+nbcrc_mpi_nbcr_CFLAGS = -I${INCLUDE_DIR} -I${SRC_DIR} -I../include
+nbcrc_mpi_nbcr_LDADD = -L${LIBRARY_DIR} -libtls -lpthread -lrdmacm
 nbcrs_SOURCES = nbcrs.c ${SRC_TARGET}
-nbcrs_CFLAGS = -I${INCLUDE_DIR} -I${SRC_DIR}
+nbcrs_CFLAGS = -I${INCLUDE_DIR} -I${SRC_DIR} -I../include
 nbcrs_LDADD = -L${LIBRARY_DIR} -libtls -lpthread -lrdmacm
+himeno_SOURCES = himenoBMTxps.c ${SRC_TARGET}
+himeno_CFLAGS = -I${INCLUDE_DIR} -I${SRC_DIR} -I../include
+himeno_LDADD = -L${LIBRARY_DIR} -libtls -lpthread -lrdmacm
+himeno_netbound_SOURCES = himenoBMTxps_netbound.c ${SRC_TARGET}
+himeno_netbound_CFLAGS = -I${INCLUDE_DIR} -I${SRC_DIR} -I../include
+himeno_netbound_LDADD = -L${LIBRARY_DIR} -libtls -lpthread -lrdmacm
+himeno_nbcr_SOURCES = himenoBMTxps_nbcr.c ${SRC_TARGET}
+himeno_nbcr_CFLAGS = -I${INCLUDE_DIR} -I${SRC_DIR} -I../include
+himeno_nbcr_LDADD = -L${LIBRARY_DIR} -libtls -lpthread -lrdmacm
+himeno_netbound_nbcr_SOURCES = himenoBMTxps_netbound_nbcr.c ${SRC_TARGET}
+himeno_netbound_nbcr_CFLAGS = -I${INCLUDE_DIR} -I${SRC_DIR} -I../include
+himeno_netbound_nbcr_LDADD = -L${LIBRARY_DIR} -libtls -lpthread -lrdmacm
 all: all-am
 
 .SUFFIXES:
@@ -215,9 +290,27 @@ uninstall-binPROGRAMS:
 
 clean-binPROGRAMS:
 	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
+himeno$(EXEEXT): $(himeno_OBJECTS) $(himeno_DEPENDENCIES) 
+	@rm -f himeno$(EXEEXT)
+	$(himeno_LINK) $(himeno_OBJECTS) $(himeno_LDADD) $(LIBS)
+himeno_nbcr$(EXEEXT): $(himeno_nbcr_OBJECTS) $(himeno_nbcr_DEPENDENCIES) 
+	@rm -f himeno_nbcr$(EXEEXT)
+	$(himeno_nbcr_LINK) $(himeno_nbcr_OBJECTS) $(himeno_nbcr_LDADD) $(LIBS)
+himeno_netbound$(EXEEXT): $(himeno_netbound_OBJECTS) $(himeno_netbound_DEPENDENCIES) 
+	@rm -f himeno_netbound$(EXEEXT)
+	$(himeno_netbound_LINK) $(himeno_netbound_OBJECTS) $(himeno_netbound_LDADD) $(LIBS)
+himeno_netbound_nbcr$(EXEEXT): $(himeno_netbound_nbcr_OBJECTS) $(himeno_netbound_nbcr_DEPENDENCIES) 
+	@rm -f himeno_netbound_nbcr$(EXEEXT)
+	$(himeno_netbound_nbcr_LINK) $(himeno_netbound_nbcr_OBJECTS) $(himeno_netbound_nbcr_LDADD) $(LIBS)
 nbcrc$(EXEEXT): $(nbcrc_OBJECTS) $(nbcrc_DEPENDENCIES) 
 	@rm -f nbcrc$(EXEEXT)
 	$(nbcrc_LINK) $(nbcrc_OBJECTS) $(nbcrc_LDADD) $(LIBS)
+nbcrc_mpi$(EXEEXT): $(nbcrc_mpi_OBJECTS) $(nbcrc_mpi_DEPENDENCIES) 
+	@rm -f nbcrc_mpi$(EXEEXT)
+	$(nbcrc_mpi_LINK) $(nbcrc_mpi_OBJECTS) $(nbcrc_mpi_LDADD) $(LIBS)
+nbcrc_mpi_nbcr$(EXEEXT): $(nbcrc_mpi_nbcr_OBJECTS) $(nbcrc_mpi_nbcr_DEPENDENCIES) 
+	@rm -f nbcrc_mpi_nbcr$(EXEEXT)
+	$(nbcrc_mpi_nbcr_LINK) $(nbcrc_mpi_nbcr_OBJECTS) $(nbcrc_mpi_nbcr_LDADD) $(LIBS)
 nbcrs$(EXEEXT): $(nbcrs_OBJECTS) $(nbcrs_DEPENDENCIES) 
 	@rm -f nbcrs$(EXEEXT)
 	$(nbcrs_LINK) $(nbcrs_OBJECTS) $(nbcrs_LDADD) $(LIBS)
@@ -228,7 +321,29 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+include ./$(DEPDIR)/himeno-himenoBMTxps.Po
+include ./$(DEPDIR)/himeno-nbcr.Po
+include ./$(DEPDIR)/himeno-nbcr_util.Po
+include ./$(DEPDIR)/himeno_nbcr-himenoBMTxps_nbcr.Po
+include ./$(DEPDIR)/himeno_nbcr-nbcr.Po
+include ./$(DEPDIR)/himeno_nbcr-nbcr_util.Po
+include ./$(DEPDIR)/himeno_netbound-himenoBMTxps_netbound.Po
+include ./$(DEPDIR)/himeno_netbound-nbcr.Po
+include ./$(DEPDIR)/himeno_netbound-nbcr_util.Po
+include ./$(DEPDIR)/himeno_netbound_nbcr-himenoBMTxps_netbound_nbcr.Po
+include ./$(DEPDIR)/himeno_netbound_nbcr-nbcr.Po
+include ./$(DEPDIR)/himeno_netbound_nbcr-nbcr_util.Po
+include ./$(DEPDIR)/nbcrc-nbcr.Po
+include ./$(DEPDIR)/nbcrc-nbcr_util.Po
 include ./$(DEPDIR)/nbcrc-nbcrc.Po
+include ./$(DEPDIR)/nbcrc_mpi-nbcr.Po
+include ./$(DEPDIR)/nbcrc_mpi-nbcr_util.Po
+include ./$(DEPDIR)/nbcrc_mpi-nbcrc_mpi.Po
+include ./$(DEPDIR)/nbcrc_mpi_nbcr-nbcr.Po
+include ./$(DEPDIR)/nbcrc_mpi_nbcr-nbcr_util.Po
+include ./$(DEPDIR)/nbcrc_mpi_nbcr-nbcrc_mpi_nbcr.Po
+include ./$(DEPDIR)/nbcrs-nbcr.Po
+include ./$(DEPDIR)/nbcrs-nbcr_util.Po
 include ./$(DEPDIR)/nbcrs-nbcrs.Po
 
 .c.o:
@@ -245,6 +360,174 @@ include ./$(DEPDIR)/nbcrs-nbcrs.Po
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
 #	$(COMPILE) -c `$(CYGPATH_W) '$<'`
 
+himeno-himenoBMTxps.o: himenoBMTxps.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(himeno_CFLAGS) $(CFLAGS) -MT himeno-himenoBMTxps.o -MD -MP -MF $(DEPDIR)/himeno-himenoBMTxps.Tpo -c -o himeno-himenoBMTxps.o `test -f 'himenoBMTxps.c' || echo '$(srcdir)/'`himenoBMTxps.c
+	mv -f $(DEPDIR)/himeno-himenoBMTxps.Tpo $(DEPDIR)/himeno-himenoBMTxps.Po
+#	source='himenoBMTxps.c' object='himeno-himenoBMTxps.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(himeno_CFLAGS) $(CFLAGS) -c -o himeno-himenoBMTxps.o `test -f 'himenoBMTxps.c' || echo '$(srcdir)/'`himenoBMTxps.c
+
+himeno-himenoBMTxps.obj: himenoBMTxps.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(himeno_CFLAGS) $(CFLAGS) -MT himeno-himenoBMTxps.obj -MD -MP -MF $(DEPDIR)/himeno-himenoBMTxps.Tpo -c -o himeno-himenoBMTxps.obj `if test -f 'himenoBMTxps.c'; then $(CYGPATH_W) 'himenoBMTxps.c'; else $(CYGPATH_W) '$(srcdir)/himenoBMTxps.c'; fi`
+	mv -f $(DEPDIR)/himeno-himenoBMTxps.Tpo $(DEPDIR)/himeno-himenoBMTxps.Po
+#	source='himenoBMTxps.c' object='himeno-himenoBMTxps.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(himeno_CFLAGS) $(CFLAGS) -c -o himeno-himenoBMTxps.obj `if test -f 'himenoBMTxps.c'; then $(CYGPATH_W) 'himenoBMTxps.c'; else $(CYGPATH_W) '$(srcdir)/himenoBMTxps.c'; fi`
+
+himeno-nbcr.o: $(SRC_DIR)/nbcr.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(himeno_CFLAGS) $(CFLAGS) -MT himeno-nbcr.o -MD -MP -MF $(DEPDIR)/himeno-nbcr.Tpo -c -o himeno-nbcr.o `test -f '$(SRC_DIR)/nbcr.c' || echo '$(srcdir)/'`$(SRC_DIR)/nbcr.c
+	mv -f $(DEPDIR)/himeno-nbcr.Tpo $(DEPDIR)/himeno-nbcr.Po
+#	source='$(SRC_DIR)/nbcr.c' object='himeno-nbcr.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(himeno_CFLAGS) $(CFLAGS) -c -o himeno-nbcr.o `test -f '$(SRC_DIR)/nbcr.c' || echo '$(srcdir)/'`$(SRC_DIR)/nbcr.c
+
+himeno-nbcr.obj: $(SRC_DIR)/nbcr.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(himeno_CFLAGS) $(CFLAGS) -MT himeno-nbcr.obj -MD -MP -MF $(DEPDIR)/himeno-nbcr.Tpo -c -o himeno-nbcr.obj `if test -f '$(SRC_DIR)/nbcr.c'; then $(CYGPATH_W) '$(SRC_DIR)/nbcr.c'; else $(CYGPATH_W) '$(srcdir)/$(SRC_DIR)/nbcr.c'; fi`
+	mv -f $(DEPDIR)/himeno-nbcr.Tpo $(DEPDIR)/himeno-nbcr.Po
+#	source='$(SRC_DIR)/nbcr.c' object='himeno-nbcr.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(himeno_CFLAGS) $(CFLAGS) -c -o himeno-nbcr.obj `if test -f '$(SRC_DIR)/nbcr.c'; then $(CYGPATH_W) '$(SRC_DIR)/nbcr.c'; else $(CYGPATH_W) '$(srcdir)/$(SRC_DIR)/nbcr.c'; fi`
+
+himeno-nbcr_util.o: $(SRC_DIR)/nbcr_util.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(himeno_CFLAGS) $(CFLAGS) -MT himeno-nbcr_util.o -MD -MP -MF $(DEPDIR)/himeno-nbcr_util.Tpo -c -o himeno-nbcr_util.o `test -f '$(SRC_DIR)/nbcr_util.c' || echo '$(srcdir)/'`$(SRC_DIR)/nbcr_util.c
+	mv -f $(DEPDIR)/himeno-nbcr_util.Tpo $(DEPDIR)/himeno-nbcr_util.Po
+#	source='$(SRC_DIR)/nbcr_util.c' object='himeno-nbcr_util.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(himeno_CFLAGS) $(CFLAGS) -c -o himeno-nbcr_util.o `test -f '$(SRC_DIR)/nbcr_util.c' || echo '$(srcdir)/'`$(SRC_DIR)/nbcr_util.c
+
+himeno-nbcr_util.obj: $(SRC_DIR)/nbcr_util.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(himeno_CFLAGS) $(CFLAGS) -MT himeno-nbcr_util.obj -MD -MP -MF $(DEPDIR)/himeno-nbcr_util.Tpo -c -o himeno-nbcr_util.obj `if test -f '$(SRC_DIR)/nbcr_util.c'; then $(CYGPATH_W) '$(SRC_DIR)/nbcr_util.c'; else $(CYGPATH_W) '$(srcdir)/$(SRC_DIR)/nbcr_util.c'; fi`
+	mv -f $(DEPDIR)/himeno-nbcr_util.Tpo $(DEPDIR)/himeno-nbcr_util.Po
+#	source='$(SRC_DIR)/nbcr_util.c' object='himeno-nbcr_util.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(himeno_CFLAGS) $(CFLAGS) -c -o himeno-nbcr_util.obj `if test -f '$(SRC_DIR)/nbcr_util.c'; then $(CYGPATH_W) '$(SRC_DIR)/nbcr_util.c'; else $(CYGPATH_W) '$(srcdir)/$(SRC_DIR)/nbcr_util.c'; fi`
+
+himeno_nbcr-himenoBMTxps_nbcr.o: himenoBMTxps_nbcr.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(himeno_nbcr_CFLAGS) $(CFLAGS) -MT himeno_nbcr-himenoBMTxps_nbcr.o -MD -MP -MF $(DEPDIR)/himeno_nbcr-himenoBMTxps_nbcr.Tpo -c -o himeno_nbcr-himenoBMTxps_nbcr.o `test -f 'himenoBMTxps_nbcr.c' || echo '$(srcdir)/'`himenoBMTxps_nbcr.c
+	mv -f $(DEPDIR)/himeno_nbcr-himenoBMTxps_nbcr.Tpo $(DEPDIR)/himeno_nbcr-himenoBMTxps_nbcr.Po
+#	source='himenoBMTxps_nbcr.c' object='himeno_nbcr-himenoBMTxps_nbcr.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(himeno_nbcr_CFLAGS) $(CFLAGS) -c -o himeno_nbcr-himenoBMTxps_nbcr.o `test -f 'himenoBMTxps_nbcr.c' || echo '$(srcdir)/'`himenoBMTxps_nbcr.c
+
+himeno_nbcr-himenoBMTxps_nbcr.obj: himenoBMTxps_nbcr.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(himeno_nbcr_CFLAGS) $(CFLAGS) -MT himeno_nbcr-himenoBMTxps_nbcr.obj -MD -MP -MF $(DEPDIR)/himeno_nbcr-himenoBMTxps_nbcr.Tpo -c -o himeno_nbcr-himenoBMTxps_nbcr.obj `if test -f 'himenoBMTxps_nbcr.c'; then $(CYGPATH_W) 'himenoBMTxps_nbcr.c'; else $(CYGPATH_W) '$(srcdir)/himenoBMTxps_nbcr.c'; fi`
+	mv -f $(DEPDIR)/himeno_nbcr-himenoBMTxps_nbcr.Tpo $(DEPDIR)/himeno_nbcr-himenoBMTxps_nbcr.Po
+#	source='himenoBMTxps_nbcr.c' object='himeno_nbcr-himenoBMTxps_nbcr.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(himeno_nbcr_CFLAGS) $(CFLAGS) -c -o himeno_nbcr-himenoBMTxps_nbcr.obj `if test -f 'himenoBMTxps_nbcr.c'; then $(CYGPATH_W) 'himenoBMTxps_nbcr.c'; else $(CYGPATH_W) '$(srcdir)/himenoBMTxps_nbcr.c'; fi`
+
+himeno_nbcr-nbcr.o: $(SRC_DIR)/nbcr.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(himeno_nbcr_CFLAGS) $(CFLAGS) -MT himeno_nbcr-nbcr.o -MD -MP -MF $(DEPDIR)/himeno_nbcr-nbcr.Tpo -c -o himeno_nbcr-nbcr.o `test -f '$(SRC_DIR)/nbcr.c' || echo '$(srcdir)/'`$(SRC_DIR)/nbcr.c
+	mv -f $(DEPDIR)/himeno_nbcr-nbcr.Tpo $(DEPDIR)/himeno_nbcr-nbcr.Po
+#	source='$(SRC_DIR)/nbcr.c' object='himeno_nbcr-nbcr.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(himeno_nbcr_CFLAGS) $(CFLAGS) -c -o himeno_nbcr-nbcr.o `test -f '$(SRC_DIR)/nbcr.c' || echo '$(srcdir)/'`$(SRC_DIR)/nbcr.c
+
+himeno_nbcr-nbcr.obj: $(SRC_DIR)/nbcr.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(himeno_nbcr_CFLAGS) $(CFLAGS) -MT himeno_nbcr-nbcr.obj -MD -MP -MF $(DEPDIR)/himeno_nbcr-nbcr.Tpo -c -o himeno_nbcr-nbcr.obj `if test -f '$(SRC_DIR)/nbcr.c'; then $(CYGPATH_W) '$(SRC_DIR)/nbcr.c'; else $(CYGPATH_W) '$(srcdir)/$(SRC_DIR)/nbcr.c'; fi`
+	mv -f $(DEPDIR)/himeno_nbcr-nbcr.Tpo $(DEPDIR)/himeno_nbcr-nbcr.Po
+#	source='$(SRC_DIR)/nbcr.c' object='himeno_nbcr-nbcr.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(himeno_nbcr_CFLAGS) $(CFLAGS) -c -o himeno_nbcr-nbcr.obj `if test -f '$(SRC_DIR)/nbcr.c'; then $(CYGPATH_W) '$(SRC_DIR)/nbcr.c'; else $(CYGPATH_W) '$(srcdir)/$(SRC_DIR)/nbcr.c'; fi`
+
+himeno_nbcr-nbcr_util.o: $(SRC_DIR)/nbcr_util.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(himeno_nbcr_CFLAGS) $(CFLAGS) -MT himeno_nbcr-nbcr_util.o -MD -MP -MF $(DEPDIR)/himeno_nbcr-nbcr_util.Tpo -c -o himeno_nbcr-nbcr_util.o `test -f '$(SRC_DIR)/nbcr_util.c' || echo '$(srcdir)/'`$(SRC_DIR)/nbcr_util.c
+	mv -f $(DEPDIR)/himeno_nbcr-nbcr_util.Tpo $(DEPDIR)/himeno_nbcr-nbcr_util.Po
+#	source='$(SRC_DIR)/nbcr_util.c' object='himeno_nbcr-nbcr_util.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(himeno_nbcr_CFLAGS) $(CFLAGS) -c -o himeno_nbcr-nbcr_util.o `test -f '$(SRC_DIR)/nbcr_util.c' || echo '$(srcdir)/'`$(SRC_DIR)/nbcr_util.c
+
+himeno_nbcr-nbcr_util.obj: $(SRC_DIR)/nbcr_util.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(himeno_nbcr_CFLAGS) $(CFLAGS) -MT himeno_nbcr-nbcr_util.obj -MD -MP -MF $(DEPDIR)/himeno_nbcr-nbcr_util.Tpo -c -o himeno_nbcr-nbcr_util.obj `if test -f '$(SRC_DIR)/nbcr_util.c'; then $(CYGPATH_W) '$(SRC_DIR)/nbcr_util.c'; else $(CYGPATH_W) '$(srcdir)/$(SRC_DIR)/nbcr_util.c'; fi`
+	mv -f $(DEPDIR)/himeno_nbcr-nbcr_util.Tpo $(DEPDIR)/himeno_nbcr-nbcr_util.Po
+#	source='$(SRC_DIR)/nbcr_util.c' object='himeno_nbcr-nbcr_util.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(himeno_nbcr_CFLAGS) $(CFLAGS) -c -o himeno_nbcr-nbcr_util.obj `if test -f '$(SRC_DIR)/nbcr_util.c'; then $(CYGPATH_W) '$(SRC_DIR)/nbcr_util.c'; else $(CYGPATH_W) '$(srcdir)/$(SRC_DIR)/nbcr_util.c'; fi`
+
+himeno_netbound-himenoBMTxps_netbound.o: himenoBMTxps_netbound.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(himeno_netbound_CFLAGS) $(CFLAGS) -MT himeno_netbound-himenoBMTxps_netbound.o -MD -MP -MF $(DEPDIR)/himeno_netbound-himenoBMTxps_netbound.Tpo -c -o himeno_netbound-himenoBMTxps_netbound.o `test -f 'himenoBMTxps_netbound.c' || echo '$(srcdir)/'`himenoBMTxps_netbound.c
+	mv -f $(DEPDIR)/himeno_netbound-himenoBMTxps_netbound.Tpo $(DEPDIR)/himeno_netbound-himenoBMTxps_netbound.Po
+#	source='himenoBMTxps_netbound.c' object='himeno_netbound-himenoBMTxps_netbound.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(himeno_netbound_CFLAGS) $(CFLAGS) -c -o himeno_netbound-himenoBMTxps_netbound.o `test -f 'himenoBMTxps_netbound.c' || echo '$(srcdir)/'`himenoBMTxps_netbound.c
+
+himeno_netbound-himenoBMTxps_netbound.obj: himenoBMTxps_netbound.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(himeno_netbound_CFLAGS) $(CFLAGS) -MT himeno_netbound-himenoBMTxps_netbound.obj -MD -MP -MF $(DEPDIR)/himeno_netbound-himenoBMTxps_netbound.Tpo -c -o himeno_netbound-himenoBMTxps_netbound.obj `if test -f 'himenoBMTxps_netbound.c'; then $(CYGPATH_W) 'himenoBMTxps_netbound.c'; else $(CYGPATH_W) '$(srcdir)/himenoBMTxps_netbound.c'; fi`
+	mv -f $(DEPDIR)/himeno_netbound-himenoBMTxps_netbound.Tpo $(DEPDIR)/himeno_netbound-himenoBMTxps_netbound.Po
+#	source='himenoBMTxps_netbound.c' object='himeno_netbound-himenoBMTxps_netbound.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(himeno_netbound_CFLAGS) $(CFLAGS) -c -o himeno_netbound-himenoBMTxps_netbound.obj `if test -f 'himenoBMTxps_netbound.c'; then $(CYGPATH_W) 'himenoBMTxps_netbound.c'; else $(CYGPATH_W) '$(srcdir)/himenoBMTxps_netbound.c'; fi`
+
+himeno_netbound-nbcr.o: $(SRC_DIR)/nbcr.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(himeno_netbound_CFLAGS) $(CFLAGS) -MT himeno_netbound-nbcr.o -MD -MP -MF $(DEPDIR)/himeno_netbound-nbcr.Tpo -c -o himeno_netbound-nbcr.o `test -f '$(SRC_DIR)/nbcr.c' || echo '$(srcdir)/'`$(SRC_DIR)/nbcr.c
+	mv -f $(DEPDIR)/himeno_netbound-nbcr.Tpo $(DEPDIR)/himeno_netbound-nbcr.Po
+#	source='$(SRC_DIR)/nbcr.c' object='himeno_netbound-nbcr.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(himeno_netbound_CFLAGS) $(CFLAGS) -c -o himeno_netbound-nbcr.o `test -f '$(SRC_DIR)/nbcr.c' || echo '$(srcdir)/'`$(SRC_DIR)/nbcr.c
+
+himeno_netbound-nbcr.obj: $(SRC_DIR)/nbcr.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(himeno_netbound_CFLAGS) $(CFLAGS) -MT himeno_netbound-nbcr.obj -MD -MP -MF $(DEPDIR)/himeno_netbound-nbcr.Tpo -c -o himeno_netbound-nbcr.obj `if test -f '$(SRC_DIR)/nbcr.c'; then $(CYGPATH_W) '$(SRC_DIR)/nbcr.c'; else $(CYGPATH_W) '$(srcdir)/$(SRC_DIR)/nbcr.c'; fi`
+	mv -f $(DEPDIR)/himeno_netbound-nbcr.Tpo $(DEPDIR)/himeno_netbound-nbcr.Po
+#	source='$(SRC_DIR)/nbcr.c' object='himeno_netbound-nbcr.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(himeno_netbound_CFLAGS) $(CFLAGS) -c -o himeno_netbound-nbcr.obj `if test -f '$(SRC_DIR)/nbcr.c'; then $(CYGPATH_W) '$(SRC_DIR)/nbcr.c'; else $(CYGPATH_W) '$(srcdir)/$(SRC_DIR)/nbcr.c'; fi`
+
+himeno_netbound-nbcr_util.o: $(SRC_DIR)/nbcr_util.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(himeno_netbound_CFLAGS) $(CFLAGS) -MT himeno_netbound-nbcr_util.o -MD -MP -MF $(DEPDIR)/himeno_netbound-nbcr_util.Tpo -c -o himeno_netbound-nbcr_util.o `test -f '$(SRC_DIR)/nbcr_util.c' || echo '$(srcdir)/'`$(SRC_DIR)/nbcr_util.c
+	mv -f $(DEPDIR)/himeno_netbound-nbcr_util.Tpo $(DEPDIR)/himeno_netbound-nbcr_util.Po
+#	source='$(SRC_DIR)/nbcr_util.c' object='himeno_netbound-nbcr_util.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(himeno_netbound_CFLAGS) $(CFLAGS) -c -o himeno_netbound-nbcr_util.o `test -f '$(SRC_DIR)/nbcr_util.c' || echo '$(srcdir)/'`$(SRC_DIR)/nbcr_util.c
+
+himeno_netbound-nbcr_util.obj: $(SRC_DIR)/nbcr_util.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(himeno_netbound_CFLAGS) $(CFLAGS) -MT himeno_netbound-nbcr_util.obj -MD -MP -MF $(DEPDIR)/himeno_netbound-nbcr_util.Tpo -c -o himeno_netbound-nbcr_util.obj `if test -f '$(SRC_DIR)/nbcr_util.c'; then $(CYGPATH_W) '$(SRC_DIR)/nbcr_util.c'; else $(CYGPATH_W) '$(srcdir)/$(SRC_DIR)/nbcr_util.c'; fi`
+	mv -f $(DEPDIR)/himeno_netbound-nbcr_util.Tpo $(DEPDIR)/himeno_netbound-nbcr_util.Po
+#	source='$(SRC_DIR)/nbcr_util.c' object='himeno_netbound-nbcr_util.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(himeno_netbound_CFLAGS) $(CFLAGS) -c -o himeno_netbound-nbcr_util.obj `if test -f '$(SRC_DIR)/nbcr_util.c'; then $(CYGPATH_W) '$(SRC_DIR)/nbcr_util.c'; else $(CYGPATH_W) '$(srcdir)/$(SRC_DIR)/nbcr_util.c'; fi`
+
+himeno_netbound_nbcr-himenoBMTxps_netbound_nbcr.o: himenoBMTxps_netbound_nbcr.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(himeno_netbound_nbcr_CFLAGS) $(CFLAGS) -MT himeno_netbound_nbcr-himenoBMTxps_netbound_nbcr.o -MD -MP -MF $(DEPDIR)/himeno_netbound_nbcr-himenoBMTxps_netbound_nbcr.Tpo -c -o himeno_netbound_nbcr-himenoBMTxps_netbound_nbcr.o `test -f 'himenoBMTxps_netbound_nbcr.c' || echo '$(srcdir)/'`himenoBMTxps_netbound_nbcr.c
+	mv -f $(DEPDIR)/himeno_netbound_nbcr-himenoBMTxps_netbound_nbcr.Tpo $(DEPDIR)/himeno_netbound_nbcr-himenoBMTxps_netbound_nbcr.Po
+#	source='himenoBMTxps_netbound_nbcr.c' object='himeno_netbound_nbcr-himenoBMTxps_netbound_nbcr.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(himeno_netbound_nbcr_CFLAGS) $(CFLAGS) -c -o himeno_netbound_nbcr-himenoBMTxps_netbound_nbcr.o `test -f 'himenoBMTxps_netbound_nbcr.c' || echo '$(srcdir)/'`himenoBMTxps_netbound_nbcr.c
+
+himeno_netbound_nbcr-himenoBMTxps_netbound_nbcr.obj: himenoBMTxps_netbound_nbcr.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(himeno_netbound_nbcr_CFLAGS) $(CFLAGS) -MT himeno_netbound_nbcr-himenoBMTxps_netbound_nbcr.obj -MD -MP -MF $(DEPDIR)/himeno_netbound_nbcr-himenoBMTxps_netbound_nbcr.Tpo -c -o himeno_netbound_nbcr-himenoBMTxps_netbound_nbcr.obj `if test -f 'himenoBMTxps_netbound_nbcr.c'; then $(CYGPATH_W) 'himenoBMTxps_netbound_nbcr.c'; else $(CYGPATH_W) '$(srcdir)/himenoBMTxps_netbound_nbcr.c'; fi`
+	mv -f $(DEPDIR)/himeno_netbound_nbcr-himenoBMTxps_netbound_nbcr.Tpo $(DEPDIR)/himeno_netbound_nbcr-himenoBMTxps_netbound_nbcr.Po
+#	source='himenoBMTxps_netbound_nbcr.c' object='himeno_netbound_nbcr-himenoBMTxps_netbound_nbcr.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(himeno_netbound_nbcr_CFLAGS) $(CFLAGS) -c -o himeno_netbound_nbcr-himenoBMTxps_netbound_nbcr.obj `if test -f 'himenoBMTxps_netbound_nbcr.c'; then $(CYGPATH_W) 'himenoBMTxps_netbound_nbcr.c'; else $(CYGPATH_W) '$(srcdir)/himenoBMTxps_netbound_nbcr.c'; fi`
+
+himeno_netbound_nbcr-nbcr.o: $(SRC_DIR)/nbcr.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(himeno_netbound_nbcr_CFLAGS) $(CFLAGS) -MT himeno_netbound_nbcr-nbcr.o -MD -MP -MF $(DEPDIR)/himeno_netbound_nbcr-nbcr.Tpo -c -o himeno_netbound_nbcr-nbcr.o `test -f '$(SRC_DIR)/nbcr.c' || echo '$(srcdir)/'`$(SRC_DIR)/nbcr.c
+	mv -f $(DEPDIR)/himeno_netbound_nbcr-nbcr.Tpo $(DEPDIR)/himeno_netbound_nbcr-nbcr.Po
+#	source='$(SRC_DIR)/nbcr.c' object='himeno_netbound_nbcr-nbcr.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(himeno_netbound_nbcr_CFLAGS) $(CFLAGS) -c -o himeno_netbound_nbcr-nbcr.o `test -f '$(SRC_DIR)/nbcr.c' || echo '$(srcdir)/'`$(SRC_DIR)/nbcr.c
+
+himeno_netbound_nbcr-nbcr.obj: $(SRC_DIR)/nbcr.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(himeno_netbound_nbcr_CFLAGS) $(CFLAGS) -MT himeno_netbound_nbcr-nbcr.obj -MD -MP -MF $(DEPDIR)/himeno_netbound_nbcr-nbcr.Tpo -c -o himeno_netbound_nbcr-nbcr.obj `if test -f '$(SRC_DIR)/nbcr.c'; then $(CYGPATH_W) '$(SRC_DIR)/nbcr.c'; else $(CYGPATH_W) '$(srcdir)/$(SRC_DIR)/nbcr.c'; fi`
+	mv -f $(DEPDIR)/himeno_netbound_nbcr-nbcr.Tpo $(DEPDIR)/himeno_netbound_nbcr-nbcr.Po
+#	source='$(SRC_DIR)/nbcr.c' object='himeno_netbound_nbcr-nbcr.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(himeno_netbound_nbcr_CFLAGS) $(CFLAGS) -c -o himeno_netbound_nbcr-nbcr.obj `if test -f '$(SRC_DIR)/nbcr.c'; then $(CYGPATH_W) '$(SRC_DIR)/nbcr.c'; else $(CYGPATH_W) '$(srcdir)/$(SRC_DIR)/nbcr.c'; fi`
+
+himeno_netbound_nbcr-nbcr_util.o: $(SRC_DIR)/nbcr_util.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(himeno_netbound_nbcr_CFLAGS) $(CFLAGS) -MT himeno_netbound_nbcr-nbcr_util.o -MD -MP -MF $(DEPDIR)/himeno_netbound_nbcr-nbcr_util.Tpo -c -o himeno_netbound_nbcr-nbcr_util.o `test -f '$(SRC_DIR)/nbcr_util.c' || echo '$(srcdir)/'`$(SRC_DIR)/nbcr_util.c
+	mv -f $(DEPDIR)/himeno_netbound_nbcr-nbcr_util.Tpo $(DEPDIR)/himeno_netbound_nbcr-nbcr_util.Po
+#	source='$(SRC_DIR)/nbcr_util.c' object='himeno_netbound_nbcr-nbcr_util.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(himeno_netbound_nbcr_CFLAGS) $(CFLAGS) -c -o himeno_netbound_nbcr-nbcr_util.o `test -f '$(SRC_DIR)/nbcr_util.c' || echo '$(srcdir)/'`$(SRC_DIR)/nbcr_util.c
+
+himeno_netbound_nbcr-nbcr_util.obj: $(SRC_DIR)/nbcr_util.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(himeno_netbound_nbcr_CFLAGS) $(CFLAGS) -MT himeno_netbound_nbcr-nbcr_util.obj -MD -MP -MF $(DEPDIR)/himeno_netbound_nbcr-nbcr_util.Tpo -c -o himeno_netbound_nbcr-nbcr_util.obj `if test -f '$(SRC_DIR)/nbcr_util.c'; then $(CYGPATH_W) '$(SRC_DIR)/nbcr_util.c'; else $(CYGPATH_W) '$(srcdir)/$(SRC_DIR)/nbcr_util.c'; fi`
+	mv -f $(DEPDIR)/himeno_netbound_nbcr-nbcr_util.Tpo $(DEPDIR)/himeno_netbound_nbcr-nbcr_util.Po
+#	source='$(SRC_DIR)/nbcr_util.c' object='himeno_netbound_nbcr-nbcr_util.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(himeno_netbound_nbcr_CFLAGS) $(CFLAGS) -c -o himeno_netbound_nbcr-nbcr_util.obj `if test -f '$(SRC_DIR)/nbcr_util.c'; then $(CYGPATH_W) '$(SRC_DIR)/nbcr_util.c'; else $(CYGPATH_W) '$(srcdir)/$(SRC_DIR)/nbcr_util.c'; fi`
+
 nbcrc-nbcrc.o: nbcrc.c
 	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(nbcrc_CFLAGS) $(CFLAGS) -MT nbcrc-nbcrc.o -MD -MP -MF $(DEPDIR)/nbcrc-nbcrc.Tpo -c -o nbcrc-nbcrc.o `test -f 'nbcrc.c' || echo '$(srcdir)/'`nbcrc.c
 	mv -f $(DEPDIR)/nbcrc-nbcrc.Tpo $(DEPDIR)/nbcrc-nbcrc.Po
@@ -259,6 +542,118 @@ nbcrc-nbcrc.obj: nbcrc.c
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
 #	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(nbcrc_CFLAGS) $(CFLAGS) -c -o nbcrc-nbcrc.obj `if test -f 'nbcrc.c'; then $(CYGPATH_W) 'nbcrc.c'; else $(CYGPATH_W) '$(srcdir)/nbcrc.c'; fi`
 
+nbcrc-nbcr.o: $(SRC_DIR)/nbcr.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(nbcrc_CFLAGS) $(CFLAGS) -MT nbcrc-nbcr.o -MD -MP -MF $(DEPDIR)/nbcrc-nbcr.Tpo -c -o nbcrc-nbcr.o `test -f '$(SRC_DIR)/nbcr.c' || echo '$(srcdir)/'`$(SRC_DIR)/nbcr.c
+	mv -f $(DEPDIR)/nbcrc-nbcr.Tpo $(DEPDIR)/nbcrc-nbcr.Po
+#	source='$(SRC_DIR)/nbcr.c' object='nbcrc-nbcr.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(nbcrc_CFLAGS) $(CFLAGS) -c -o nbcrc-nbcr.o `test -f '$(SRC_DIR)/nbcr.c' || echo '$(srcdir)/'`$(SRC_DIR)/nbcr.c
+
+nbcrc-nbcr.obj: $(SRC_DIR)/nbcr.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(nbcrc_CFLAGS) $(CFLAGS) -MT nbcrc-nbcr.obj -MD -MP -MF $(DEPDIR)/nbcrc-nbcr.Tpo -c -o nbcrc-nbcr.obj `if test -f '$(SRC_DIR)/nbcr.c'; then $(CYGPATH_W) '$(SRC_DIR)/nbcr.c'; else $(CYGPATH_W) '$(srcdir)/$(SRC_DIR)/nbcr.c'; fi`
+	mv -f $(DEPDIR)/nbcrc-nbcr.Tpo $(DEPDIR)/nbcrc-nbcr.Po
+#	source='$(SRC_DIR)/nbcr.c' object='nbcrc-nbcr.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(nbcrc_CFLAGS) $(CFLAGS) -c -o nbcrc-nbcr.obj `if test -f '$(SRC_DIR)/nbcr.c'; then $(CYGPATH_W) '$(SRC_DIR)/nbcr.c'; else $(CYGPATH_W) '$(srcdir)/$(SRC_DIR)/nbcr.c'; fi`
+
+nbcrc-nbcr_util.o: $(SRC_DIR)/nbcr_util.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(nbcrc_CFLAGS) $(CFLAGS) -MT nbcrc-nbcr_util.o -MD -MP -MF $(DEPDIR)/nbcrc-nbcr_util.Tpo -c -o nbcrc-nbcr_util.o `test -f '$(SRC_DIR)/nbcr_util.c' || echo '$(srcdir)/'`$(SRC_DIR)/nbcr_util.c
+	mv -f $(DEPDIR)/nbcrc-nbcr_util.Tpo $(DEPDIR)/nbcrc-nbcr_util.Po
+#	source='$(SRC_DIR)/nbcr_util.c' object='nbcrc-nbcr_util.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(nbcrc_CFLAGS) $(CFLAGS) -c -o nbcrc-nbcr_util.o `test -f '$(SRC_DIR)/nbcr_util.c' || echo '$(srcdir)/'`$(SRC_DIR)/nbcr_util.c
+
+nbcrc-nbcr_util.obj: $(SRC_DIR)/nbcr_util.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(nbcrc_CFLAGS) $(CFLAGS) -MT nbcrc-nbcr_util.obj -MD -MP -MF $(DEPDIR)/nbcrc-nbcr_util.Tpo -c -o nbcrc-nbcr_util.obj `if test -f '$(SRC_DIR)/nbcr_util.c'; then $(CYGPATH_W) '$(SRC_DIR)/nbcr_util.c'; else $(CYGPATH_W) '$(srcdir)/$(SRC_DIR)/nbcr_util.c'; fi`
+	mv -f $(DEPDIR)/nbcrc-nbcr_util.Tpo $(DEPDIR)/nbcrc-nbcr_util.Po
+#	source='$(SRC_DIR)/nbcr_util.c' object='nbcrc-nbcr_util.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(nbcrc_CFLAGS) $(CFLAGS) -c -o nbcrc-nbcr_util.obj `if test -f '$(SRC_DIR)/nbcr_util.c'; then $(CYGPATH_W) '$(SRC_DIR)/nbcr_util.c'; else $(CYGPATH_W) '$(srcdir)/$(SRC_DIR)/nbcr_util.c'; fi`
+
+nbcrc_mpi-nbcrc_mpi.o: nbcrc_mpi.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(nbcrc_mpi_CFLAGS) $(CFLAGS) -MT nbcrc_mpi-nbcrc_mpi.o -MD -MP -MF $(DEPDIR)/nbcrc_mpi-nbcrc_mpi.Tpo -c -o nbcrc_mpi-nbcrc_mpi.o `test -f 'nbcrc_mpi.c' || echo '$(srcdir)/'`nbcrc_mpi.c
+	mv -f $(DEPDIR)/nbcrc_mpi-nbcrc_mpi.Tpo $(DEPDIR)/nbcrc_mpi-nbcrc_mpi.Po
+#	source='nbcrc_mpi.c' object='nbcrc_mpi-nbcrc_mpi.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(nbcrc_mpi_CFLAGS) $(CFLAGS) -c -o nbcrc_mpi-nbcrc_mpi.o `test -f 'nbcrc_mpi.c' || echo '$(srcdir)/'`nbcrc_mpi.c
+
+nbcrc_mpi-nbcrc_mpi.obj: nbcrc_mpi.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(nbcrc_mpi_CFLAGS) $(CFLAGS) -MT nbcrc_mpi-nbcrc_mpi.obj -MD -MP -MF $(DEPDIR)/nbcrc_mpi-nbcrc_mpi.Tpo -c -o nbcrc_mpi-nbcrc_mpi.obj `if test -f 'nbcrc_mpi.c'; then $(CYGPATH_W) 'nbcrc_mpi.c'; else $(CYGPATH_W) '$(srcdir)/nbcrc_mpi.c'; fi`
+	mv -f $(DEPDIR)/nbcrc_mpi-nbcrc_mpi.Tpo $(DEPDIR)/nbcrc_mpi-nbcrc_mpi.Po
+#	source='nbcrc_mpi.c' object='nbcrc_mpi-nbcrc_mpi.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(nbcrc_mpi_CFLAGS) $(CFLAGS) -c -o nbcrc_mpi-nbcrc_mpi.obj `if test -f 'nbcrc_mpi.c'; then $(CYGPATH_W) 'nbcrc_mpi.c'; else $(CYGPATH_W) '$(srcdir)/nbcrc_mpi.c'; fi`
+
+nbcrc_mpi-nbcr.o: $(SRC_DIR)/nbcr.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(nbcrc_mpi_CFLAGS) $(CFLAGS) -MT nbcrc_mpi-nbcr.o -MD -MP -MF $(DEPDIR)/nbcrc_mpi-nbcr.Tpo -c -o nbcrc_mpi-nbcr.o `test -f '$(SRC_DIR)/nbcr.c' || echo '$(srcdir)/'`$(SRC_DIR)/nbcr.c
+	mv -f $(DEPDIR)/nbcrc_mpi-nbcr.Tpo $(DEPDIR)/nbcrc_mpi-nbcr.Po
+#	source='$(SRC_DIR)/nbcr.c' object='nbcrc_mpi-nbcr.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(nbcrc_mpi_CFLAGS) $(CFLAGS) -c -o nbcrc_mpi-nbcr.o `test -f '$(SRC_DIR)/nbcr.c' || echo '$(srcdir)/'`$(SRC_DIR)/nbcr.c
+
+nbcrc_mpi-nbcr.obj: $(SRC_DIR)/nbcr.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(nbcrc_mpi_CFLAGS) $(CFLAGS) -MT nbcrc_mpi-nbcr.obj -MD -MP -MF $(DEPDIR)/nbcrc_mpi-nbcr.Tpo -c -o nbcrc_mpi-nbcr.obj `if test -f '$(SRC_DIR)/nbcr.c'; then $(CYGPATH_W) '$(SRC_DIR)/nbcr.c'; else $(CYGPATH_W) '$(srcdir)/$(SRC_DIR)/nbcr.c'; fi`
+	mv -f $(DEPDIR)/nbcrc_mpi-nbcr.Tpo $(DEPDIR)/nbcrc_mpi-nbcr.Po
+#	source='$(SRC_DIR)/nbcr.c' object='nbcrc_mpi-nbcr.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(nbcrc_mpi_CFLAGS) $(CFLAGS) -c -o nbcrc_mpi-nbcr.obj `if test -f '$(SRC_DIR)/nbcr.c'; then $(CYGPATH_W) '$(SRC_DIR)/nbcr.c'; else $(CYGPATH_W) '$(srcdir)/$(SRC_DIR)/nbcr.c'; fi`
+
+nbcrc_mpi-nbcr_util.o: $(SRC_DIR)/nbcr_util.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(nbcrc_mpi_CFLAGS) $(CFLAGS) -MT nbcrc_mpi-nbcr_util.o -MD -MP -MF $(DEPDIR)/nbcrc_mpi-nbcr_util.Tpo -c -o nbcrc_mpi-nbcr_util.o `test -f '$(SRC_DIR)/nbcr_util.c' || echo '$(srcdir)/'`$(SRC_DIR)/nbcr_util.c
+	mv -f $(DEPDIR)/nbcrc_mpi-nbcr_util.Tpo $(DEPDIR)/nbcrc_mpi-nbcr_util.Po
+#	source='$(SRC_DIR)/nbcr_util.c' object='nbcrc_mpi-nbcr_util.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(nbcrc_mpi_CFLAGS) $(CFLAGS) -c -o nbcrc_mpi-nbcr_util.o `test -f '$(SRC_DIR)/nbcr_util.c' || echo '$(srcdir)/'`$(SRC_DIR)/nbcr_util.c
+
+nbcrc_mpi-nbcr_util.obj: $(SRC_DIR)/nbcr_util.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(nbcrc_mpi_CFLAGS) $(CFLAGS) -MT nbcrc_mpi-nbcr_util.obj -MD -MP -MF $(DEPDIR)/nbcrc_mpi-nbcr_util.Tpo -c -o nbcrc_mpi-nbcr_util.obj `if test -f '$(SRC_DIR)/nbcr_util.c'; then $(CYGPATH_W) '$(SRC_DIR)/nbcr_util.c'; else $(CYGPATH_W) '$(srcdir)/$(SRC_DIR)/nbcr_util.c'; fi`
+	mv -f $(DEPDIR)/nbcrc_mpi-nbcr_util.Tpo $(DEPDIR)/nbcrc_mpi-nbcr_util.Po
+#	source='$(SRC_DIR)/nbcr_util.c' object='nbcrc_mpi-nbcr_util.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(nbcrc_mpi_CFLAGS) $(CFLAGS) -c -o nbcrc_mpi-nbcr_util.obj `if test -f '$(SRC_DIR)/nbcr_util.c'; then $(CYGPATH_W) '$(SRC_DIR)/nbcr_util.c'; else $(CYGPATH_W) '$(srcdir)/$(SRC_DIR)/nbcr_util.c'; fi`
+
+nbcrc_mpi_nbcr-nbcrc_mpi_nbcr.o: nbcrc_mpi_nbcr.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(nbcrc_mpi_nbcr_CFLAGS) $(CFLAGS) -MT nbcrc_mpi_nbcr-nbcrc_mpi_nbcr.o -MD -MP -MF $(DEPDIR)/nbcrc_mpi_nbcr-nbcrc_mpi_nbcr.Tpo -c -o nbcrc_mpi_nbcr-nbcrc_mpi_nbcr.o `test -f 'nbcrc_mpi_nbcr.c' || echo '$(srcdir)/'`nbcrc_mpi_nbcr.c
+	mv -f $(DEPDIR)/nbcrc_mpi_nbcr-nbcrc_mpi_nbcr.Tpo $(DEPDIR)/nbcrc_mpi_nbcr-nbcrc_mpi_nbcr.Po
+#	source='nbcrc_mpi_nbcr.c' object='nbcrc_mpi_nbcr-nbcrc_mpi_nbcr.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(nbcrc_mpi_nbcr_CFLAGS) $(CFLAGS) -c -o nbcrc_mpi_nbcr-nbcrc_mpi_nbcr.o `test -f 'nbcrc_mpi_nbcr.c' || echo '$(srcdir)/'`nbcrc_mpi_nbcr.c
+
+nbcrc_mpi_nbcr-nbcrc_mpi_nbcr.obj: nbcrc_mpi_nbcr.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(nbcrc_mpi_nbcr_CFLAGS) $(CFLAGS) -MT nbcrc_mpi_nbcr-nbcrc_mpi_nbcr.obj -MD -MP -MF $(DEPDIR)/nbcrc_mpi_nbcr-nbcrc_mpi_nbcr.Tpo -c -o nbcrc_mpi_nbcr-nbcrc_mpi_nbcr.obj `if test -f 'nbcrc_mpi_nbcr.c'; then $(CYGPATH_W) 'nbcrc_mpi_nbcr.c'; else $(CYGPATH_W) '$(srcdir)/nbcrc_mpi_nbcr.c'; fi`
+	mv -f $(DEPDIR)/nbcrc_mpi_nbcr-nbcrc_mpi_nbcr.Tpo $(DEPDIR)/nbcrc_mpi_nbcr-nbcrc_mpi_nbcr.Po
+#	source='nbcrc_mpi_nbcr.c' object='nbcrc_mpi_nbcr-nbcrc_mpi_nbcr.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(nbcrc_mpi_nbcr_CFLAGS) $(CFLAGS) -c -o nbcrc_mpi_nbcr-nbcrc_mpi_nbcr.obj `if test -f 'nbcrc_mpi_nbcr.c'; then $(CYGPATH_W) 'nbcrc_mpi_nbcr.c'; else $(CYGPATH_W) '$(srcdir)/nbcrc_mpi_nbcr.c'; fi`
+
+nbcrc_mpi_nbcr-nbcr.o: $(SRC_DIR)/nbcr.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(nbcrc_mpi_nbcr_CFLAGS) $(CFLAGS) -MT nbcrc_mpi_nbcr-nbcr.o -MD -MP -MF $(DEPDIR)/nbcrc_mpi_nbcr-nbcr.Tpo -c -o nbcrc_mpi_nbcr-nbcr.o `test -f '$(SRC_DIR)/nbcr.c' || echo '$(srcdir)/'`$(SRC_DIR)/nbcr.c
+	mv -f $(DEPDIR)/nbcrc_mpi_nbcr-nbcr.Tpo $(DEPDIR)/nbcrc_mpi_nbcr-nbcr.Po
+#	source='$(SRC_DIR)/nbcr.c' object='nbcrc_mpi_nbcr-nbcr.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(nbcrc_mpi_nbcr_CFLAGS) $(CFLAGS) -c -o nbcrc_mpi_nbcr-nbcr.o `test -f '$(SRC_DIR)/nbcr.c' || echo '$(srcdir)/'`$(SRC_DIR)/nbcr.c
+
+nbcrc_mpi_nbcr-nbcr.obj: $(SRC_DIR)/nbcr.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(nbcrc_mpi_nbcr_CFLAGS) $(CFLAGS) -MT nbcrc_mpi_nbcr-nbcr.obj -MD -MP -MF $(DEPDIR)/nbcrc_mpi_nbcr-nbcr.Tpo -c -o nbcrc_mpi_nbcr-nbcr.obj `if test -f '$(SRC_DIR)/nbcr.c'; then $(CYGPATH_W) '$(SRC_DIR)/nbcr.c'; else $(CYGPATH_W) '$(srcdir)/$(SRC_DIR)/nbcr.c'; fi`
+	mv -f $(DEPDIR)/nbcrc_mpi_nbcr-nbcr.Tpo $(DEPDIR)/nbcrc_mpi_nbcr-nbcr.Po
+#	source='$(SRC_DIR)/nbcr.c' object='nbcrc_mpi_nbcr-nbcr.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(nbcrc_mpi_nbcr_CFLAGS) $(CFLAGS) -c -o nbcrc_mpi_nbcr-nbcr.obj `if test -f '$(SRC_DIR)/nbcr.c'; then $(CYGPATH_W) '$(SRC_DIR)/nbcr.c'; else $(CYGPATH_W) '$(srcdir)/$(SRC_DIR)/nbcr.c'; fi`
+
+nbcrc_mpi_nbcr-nbcr_util.o: $(SRC_DIR)/nbcr_util.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(nbcrc_mpi_nbcr_CFLAGS) $(CFLAGS) -MT nbcrc_mpi_nbcr-nbcr_util.o -MD -MP -MF $(DEPDIR)/nbcrc_mpi_nbcr-nbcr_util.Tpo -c -o nbcrc_mpi_nbcr-nbcr_util.o `test -f '$(SRC_DIR)/nbcr_util.c' || echo '$(srcdir)/'`$(SRC_DIR)/nbcr_util.c
+	mv -f $(DEPDIR)/nbcrc_mpi_nbcr-nbcr_util.Tpo $(DEPDIR)/nbcrc_mpi_nbcr-nbcr_util.Po
+#	source='$(SRC_DIR)/nbcr_util.c' object='nbcrc_mpi_nbcr-nbcr_util.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(nbcrc_mpi_nbcr_CFLAGS) $(CFLAGS) -c -o nbcrc_mpi_nbcr-nbcr_util.o `test -f '$(SRC_DIR)/nbcr_util.c' || echo '$(srcdir)/'`$(SRC_DIR)/nbcr_util.c
+
+nbcrc_mpi_nbcr-nbcr_util.obj: $(SRC_DIR)/nbcr_util.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(nbcrc_mpi_nbcr_CFLAGS) $(CFLAGS) -MT nbcrc_mpi_nbcr-nbcr_util.obj -MD -MP -MF $(DEPDIR)/nbcrc_mpi_nbcr-nbcr_util.Tpo -c -o nbcrc_mpi_nbcr-nbcr_util.obj `if test -f '$(SRC_DIR)/nbcr_util.c'; then $(CYGPATH_W) '$(SRC_DIR)/nbcr_util.c'; else $(CYGPATH_W) '$(srcdir)/$(SRC_DIR)/nbcr_util.c'; fi`
+	mv -f $(DEPDIR)/nbcrc_mpi_nbcr-nbcr_util.Tpo $(DEPDIR)/nbcrc_mpi_nbcr-nbcr_util.Po
+#	source='$(SRC_DIR)/nbcr_util.c' object='nbcrc_mpi_nbcr-nbcr_util.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(nbcrc_mpi_nbcr_CFLAGS) $(CFLAGS) -c -o nbcrc_mpi_nbcr-nbcr_util.obj `if test -f '$(SRC_DIR)/nbcr_util.c'; then $(CYGPATH_W) '$(SRC_DIR)/nbcr_util.c'; else $(CYGPATH_W) '$(srcdir)/$(SRC_DIR)/nbcr_util.c'; fi`
+
 nbcrs-nbcrs.o: nbcrs.c
 	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(nbcrs_CFLAGS) $(CFLAGS) -MT nbcrs-nbcrs.o -MD -MP -MF $(DEPDIR)/nbcrs-nbcrs.Tpo -c -o nbcrs-nbcrs.o `test -f 'nbcrs.c' || echo '$(srcdir)/'`nbcrs.c
 	mv -f $(DEPDIR)/nbcrs-nbcrs.Tpo $(DEPDIR)/nbcrs-nbcrs.Po
@@ -272,6 +667,34 @@ nbcrs-nbcrs.obj: nbcrs.c
 #	source='nbcrs.c' object='nbcrs-nbcrs.obj' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
 #	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(nbcrs_CFLAGS) $(CFLAGS) -c -o nbcrs-nbcrs.obj `if test -f 'nbcrs.c'; then $(CYGPATH_W) 'nbcrs.c'; else $(CYGPATH_W) '$(srcdir)/nbcrs.c'; fi`
+
+nbcrs-nbcr.o: $(SRC_DIR)/nbcr.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(nbcrs_CFLAGS) $(CFLAGS) -MT nbcrs-nbcr.o -MD -MP -MF $(DEPDIR)/nbcrs-nbcr.Tpo -c -o nbcrs-nbcr.o `test -f '$(SRC_DIR)/nbcr.c' || echo '$(srcdir)/'`$(SRC_DIR)/nbcr.c
+	mv -f $(DEPDIR)/nbcrs-nbcr.Tpo $(DEPDIR)/nbcrs-nbcr.Po
+#	source='$(SRC_DIR)/nbcr.c' object='nbcrs-nbcr.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(nbcrs_CFLAGS) $(CFLAGS) -c -o nbcrs-nbcr.o `test -f '$(SRC_DIR)/nbcr.c' || echo '$(srcdir)/'`$(SRC_DIR)/nbcr.c
+
+nbcrs-nbcr.obj: $(SRC_DIR)/nbcr.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(nbcrs_CFLAGS) $(CFLAGS) -MT nbcrs-nbcr.obj -MD -MP -MF $(DEPDIR)/nbcrs-nbcr.Tpo -c -o nbcrs-nbcr.obj `if test -f '$(SRC_DIR)/nbcr.c'; then $(CYGPATH_W) '$(SRC_DIR)/nbcr.c'; else $(CYGPATH_W) '$(srcdir)/$(SRC_DIR)/nbcr.c'; fi`
+	mv -f $(DEPDIR)/nbcrs-nbcr.Tpo $(DEPDIR)/nbcrs-nbcr.Po
+#	source='$(SRC_DIR)/nbcr.c' object='nbcrs-nbcr.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(nbcrs_CFLAGS) $(CFLAGS) -c -o nbcrs-nbcr.obj `if test -f '$(SRC_DIR)/nbcr.c'; then $(CYGPATH_W) '$(SRC_DIR)/nbcr.c'; else $(CYGPATH_W) '$(srcdir)/$(SRC_DIR)/nbcr.c'; fi`
+
+nbcrs-nbcr_util.o: $(SRC_DIR)/nbcr_util.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(nbcrs_CFLAGS) $(CFLAGS) -MT nbcrs-nbcr_util.o -MD -MP -MF $(DEPDIR)/nbcrs-nbcr_util.Tpo -c -o nbcrs-nbcr_util.o `test -f '$(SRC_DIR)/nbcr_util.c' || echo '$(srcdir)/'`$(SRC_DIR)/nbcr_util.c
+	mv -f $(DEPDIR)/nbcrs-nbcr_util.Tpo $(DEPDIR)/nbcrs-nbcr_util.Po
+#	source='$(SRC_DIR)/nbcr_util.c' object='nbcrs-nbcr_util.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(nbcrs_CFLAGS) $(CFLAGS) -c -o nbcrs-nbcr_util.o `test -f '$(SRC_DIR)/nbcr_util.c' || echo '$(srcdir)/'`$(SRC_DIR)/nbcr_util.c
+
+nbcrs-nbcr_util.obj: $(SRC_DIR)/nbcr_util.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(nbcrs_CFLAGS) $(CFLAGS) -MT nbcrs-nbcr_util.obj -MD -MP -MF $(DEPDIR)/nbcrs-nbcr_util.Tpo -c -o nbcrs-nbcr_util.obj `if test -f '$(SRC_DIR)/nbcr_util.c'; then $(CYGPATH_W) '$(SRC_DIR)/nbcr_util.c'; else $(CYGPATH_W) '$(srcdir)/$(SRC_DIR)/nbcr_util.c'; fi`
+	mv -f $(DEPDIR)/nbcrs-nbcr_util.Tpo $(DEPDIR)/nbcrs-nbcr_util.Po
+#	source='$(SRC_DIR)/nbcr_util.c' object='nbcrs-nbcr_util.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(nbcrs_CFLAGS) $(CFLAGS) -c -o nbcrs-nbcr_util.obj `if test -f '$(SRC_DIR)/nbcr_util.c'; then $(CYGPATH_W) '$(SRC_DIR)/nbcr_util.c'; else $(CYGPATH_W) '$(srcdir)/$(SRC_DIR)/nbcr_util.c'; fi`
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \

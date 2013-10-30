@@ -1,84 +1,48 @@
+/*
 #include <sys/time.h>
 #include <stdio.h>
 
-#include <unistd.h> /* for close */
+#include <unistd.h> 
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/ioctl.h>
 #include <netinet/in.h>
 #include <net/if.h>
 #include <arpa/inet.h>
+*/
 
-#include "ibtls.h"
-#include "common.h"
+#include <stdio.h>
+#include <stdlib.h>
 
-#define NUM 1
-#define ITE 1000
-#define SLP 1
+#include "nbcr.h"
 
-int get_tag(void);
-//char* get_ip_addr (char* interface);                                                                                                       
+#ifndef ID
+#define ID 1
+#endif
 
 int main(int argc, char **argv)
 {
-  char* host;
+  int i = 0;
+  int size;
   char* data;
-  uint64_t size;
-  //  int flag1, flag2;                                                                                                                      
-  int flag1;
-  double s,e;
-  double ss,ee;
+  nbcr_comm *comm;
+  int status;
+
   if (argc < 2) {
-    printf("./rdma_client_test <host> <send size(Bytes)>\n");
+    printf("./nbcrc <send size(Bytes)>\n");
     exit(1);
   }
-  host = argv[1];
-  size = atoi(argv[2]);
+  
+  size = atoi(argv[1]);
+  data = (char*)valloc(size);
 
-  struct  RDMA_communicator comm;
-  struct  RDMA_param param;  param.host = host;
-  s = get_dtime();
-  RDMA_Active_Init(&comm, &param);
-  e = get_dtime();
-
-  /* ===== */
-  //  data = (char*)malloc(size);                                                                                                            
-  data = (char*)RDMA_Alloc(size);
-
-  int i, j;
-  char * a;
-  flag1= 0;
-  for (i=0; i <= size-2; i++) {
-    //data[i] = (char) (i % 26 + 'a');                                                                                                       
-    data[i] = 'x';
-    //    a = data[i];                                                                                                                       
-    //    data[i] = a;                                                                                                                       
+  comm = nbcr_init(data, size, &size);  
+  //comm = nbcr_init(data, size);  
+  for (i = 0; i < 1000000; i++) {
+    usleep(1000000);
+    status = nbcr_checkpoint(comm, i);
+    //    fprintf(stderr, "%d\n", status);
   }
-  data[size-1] += '\0';
-
-
-  printf("Initialization: %f\n",e - s);
-  //  sleep(3);                                                                                                                              
-  ss = get_dtime();
-  // RDMA_Sendr_ns(data, size, get_tag(), &comm);                                                                                            
-  struct RDMA_request req[NUM];
-
-  for (j = 0; j < ITE; j++) {
-    s = get_dtime();
-    for (i = 0; i < NUM; i++) {
-      RDMA_Isend(data + i * (size/NUM), size/NUM, NULL, 0, 2, &comm, &req[i]);
-    }
-    for (i = 0; i < NUM; i++) {      RDMA_Wait(&req[i]);
-    }    e = get_dtime();
-    printf("i=%d\n", j);
-    printf("Send: %d[MB]  %f %f GB/s\n", (size/1000000) ,  e - s, (size/1000000000.0  )/(e - s));
-    sleep(SLP);
-  }
-  ee = get_dtime();
-  sleep(1);
-  printf("Send: %d[MB]  %f %f GB/s\n", (size/1000000) * ITE ,  ee - ss, (size/1000000000.0 * ITE )/(ee -  ss));
-  //  sleep(2);                                                                                                                              
+  nbcr_finalize(comm);
   return 0;
-  //  RDMA_Active_Finalize(&comm);                                                                                                           
-
 }
